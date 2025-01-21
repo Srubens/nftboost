@@ -6,15 +6,41 @@ import Thumb01 from '../../public/img-neft/01.jpg'
 import arrow from '../../public/arrow.svg'
 import 'swiper/css'
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import gsap from "gsap";
+
+gsap.registerPlugin(ScrollTrigger)
 
 function CarrouselCards({data}) {
 
     const swiperRef = useRef()
+    const areaSlideRef = useRef(null)
+
+    useEffect(()=>{
+        const areaSlide = areaSlideRef.current
+        const tl = gsap.timeline()
+
+        tl.fromTo(areaSlide,{
+            opacity:0,
+            y:50
+        },{
+            opacity:1,
+            y:0,
+            ease:'power3.out',
+            duration:2,
+            scrollTrigger:{
+                trigger:areaSlide,
+                // markers:true,
+                start:'top-=300 center',
+                scrub:true
+            }
+        })
+    },[])
 
     return (
         <>
-        <div className="w-full relative" >
+        <div className="w-full relative" ref={areaSlideRef} >
         <button className="hidden w-12 h-12 bg-blue-primary rounded-full items-center justify-center absolute z-10 top-1/2 -mt-6 -left-6 hover:bg-gray-hover-btn-slide transition-all ease-linear border border-white border-opacity-5 @desktop:flex"
          onClick={(() =>swiperRef.current?.slidePrev())}
         >
@@ -51,10 +77,7 @@ function CarrouselCards({data}) {
                  }}
                  className="!px-3"
             >
-                {data.map(({name,
-thumbnail,
-value,
-value_brl}, index) => (
+                {data.map(({name, thumbnail,value,value_brl}, index) => (
 
                     <SwiperSlide key={index}>
                         <CardNFT

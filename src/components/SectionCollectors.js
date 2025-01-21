@@ -1,3 +1,4 @@
+"use client"
 import Cardcollectors from "./CardCollectors";
 import ContainerGrid from "./ContainerGrid";
 import TitleSection from "./TitleSection";
@@ -9,8 +10,36 @@ import Thumb05 from '../../public/img-neft/05.jpg'
 import Thumb06 from '../../public/img-neft/06.jpg'
 import Thumb07 from '../../public/img-neft/07.jpg'
 import Thumb08 from '../../public/img-neft/08.jpg'
+import { useEffect, useRef } from "react";
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import gsap from "gsap";
+
+gsap.registerPlugin(ScrollTrigger)
 
 function SectionCollectors() {
+
+  const areaCollectorsRef = useRef(null)
+
+    useEffect(()=>{
+        const areaCollectors = areaCollectorsRef.current
+        const tl = gsap.timeline()
+
+        tl.fromTo(areaCollectors,{
+            opacity:0,
+            y:50
+        },{
+            opacity:1,
+            y:0,
+            ease:'power3.out',
+            duration:2,
+            scrollTrigger:{
+                trigger:areaCollectors,
+                // markers:true,
+                start:'top-=300 center',
+                scrub:true
+            }
+        })
+    },[])
 
     const featuredCollection = [
         {
@@ -70,7 +99,9 @@ function SectionCollectors() {
                     title="Colecionadores em foco"
                     subtitle="Principais Colecionadores"
                 />
-                <div className="grid grid-cols-1 gap-x-4 @tablet:grid-cols-2 @desktop:gap-x-8 gap-y-4" >
+                <div className="grid grid-cols-1 gap-x-4 @tablet:grid-cols-2 @desktop:gap-x-8 gap-y-4"
+                  ref={areaCollectorsRef}
+                 >
                 {featuredCollection.map(({name, thumbnail, percent,valueBTC},index)=>(
                     <Cardcollectors 
                         key={index}
